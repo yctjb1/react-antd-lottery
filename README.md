@@ -9,7 +9,7 @@
 
 yarn create react-app react-antd-lottery --template typescript
 
-yarn add react-router less-loader @types/react-router antd
+yarn add react-router-dom @types/react-router-dom  less-loader  antd
 
 
 

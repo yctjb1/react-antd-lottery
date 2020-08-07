@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react';
 import { HomeButton } from '@components/commonButton'
-const SettingPage = (props: any) => <Fragment>
-    这里是配置页
+const LotteryPage = (props: any) => <Fragment>
+    这里是抽奖页
     <HomeButton />
 </Fragment>
 
-export default SettingPage
+export default LotteryPage
