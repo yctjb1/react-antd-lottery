@@ -4,7 +4,7 @@ const { when, whenDev, whenProd, whenCI, whenTest, ESLINT_MODES, POSTCSS_MODES }
 
 const path = require('path')
 
-
+// 配置参考掘金https://juejin.im/post/6844904162690334728
 module.exports = {
     reactScriptsVersion: "react-scripts",/* (default value) */
     webpack: {
@@ -38,5 +38,6 @@ module.exports = {
                 },
             },
         }
-    ],
+    ]
+
 };

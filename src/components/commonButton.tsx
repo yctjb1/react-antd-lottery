@@ -11,3 +11,6 @@ export const LotteryButton = (props: any) => <Link to="/lottery">
 export const SettingButton = (props: any) => <Link to="/setting">
     <Button type="primary" danger {...props}>设置页</Button>
 </Link>
+export const TailwindButton = (props: any) => <Link to="/demoTailwind">
+    <Button type="default" {...props}>Tailwind测试页</Button>
+</Link>
