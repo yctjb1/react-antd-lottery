@@ -87,3 +87,36 @@ export const exportExcel = (export_json: any) => {
     document.body.removeChild(e);
 }
 
+export const downloadTemplate = () => {
+
+
+    const wb = {
+        SheetNames: ["抽奖名单"], Sheets: {
+            "抽奖名单": XLSX.utils.json_to_sheet([{ "编号": "", "姓名": "" }])
+        }, Props: {}
+    };
+
+
+    const str = XLSX.write(wb, {
+        bookType: 'xlsx', // 输出的文件类型
+        type: 'buffer', // 输出的数据类型
+        compression: true // 开启zip压缩
+    });
+
+    const buffer = new ArrayBuffer(str.length);
+    let view = new Uint8Array(buffer);
+    for (var i = 0; i != str.length; ++i) view[i] = str.charCodeAt(i) & 0xFF;
+
+    const e = document.createElement('a');
+    e.download = "抽奖名单模板.xlsx";
+    e.style.display = 'none';
+
+    var blob = new Blob([buffer], { type: "application/octet-stream" });
+    e.href = URL.createObjectURL(blob);
+
+    document.body.appendChild(e);
+
+    e.click();
+
+    document.body.removeChild(e);
+}

@@ -4,7 +4,7 @@ import SettingModal from '@components/SettingModal';
 import {
     PlayCircleOutlined, PauseCircleOutlined
 } from '@ant-design/icons';
-import { exportExcel } from "@utils/handleExcel"
+import { exportExcel, downloadTemplate } from "@utils/handleExcel"
 import differenceWith from 'lodash/differenceWith';
 import intersectionWith from 'lodash/intersectionWith';
 import isEqual from 'lodash/isEqual';
@@ -562,19 +562,21 @@ export default (props: any) => {
                 <Button style={{ borderRadius: "0 25px 25px 0" }}
                     disabled={tcOptions.tcRunning || awardOptions.currentAwardKey === awardOptions.awards.slice(-1)[0].key}
                     onClick={() => handleChangeAward("next")}>下一个奖</Button></li>
-            <li>本轮中奖人数
-                <Tooltip title={"注:可以选择的范围取决于当前奖品总数"} placement="bottom">
-                    <Select
-                        value={lotterOptions.active_resultsNumber}
-                        disabled={tcOptions.tcRunning}
-                        onChange={(value) => setLotterOptions(Object.assign({}, lotterOptions, { active_resultsNumber: value }))}>
+            <li>
 
-                        {createOption(awardOptions).map((item: any) => <Option key={item} value={item}>
-                            {item}
-                        </Option>
-                        )}
-                    </Select>
+                <Tooltip title={"注:可以选择的范围取决于当前奖品总数"} placement="bottom">
+                    <span>本轮中奖人数</span>
                 </Tooltip>
+                <Select
+                    value={lotterOptions.active_resultsNumber}
+                    disabled={tcOptions.tcRunning}
+                    onChange={(value) => setLotterOptions(Object.assign({}, lotterOptions, { active_resultsNumber: value }))}>
+
+                    {createOption(awardOptions).map((item: any) => <Option key={item} value={item}>
+                        {item}
+                    </Option>
+                    )}
+                </Select>
 
                 {/* <br /><span>奖池所剩<b>{awardOptions.currentAwardLeft}</b>个</span> */}
             </li>
@@ -591,6 +593,8 @@ export default (props: any) => {
             <li>
                 <Button size="small" disabled={tcOptions.tcRunning || lotterOptions.result.length === 0}
                     onClick={() => handleExport()}>导出全部</Button>
+                <Button size="small" type={"link"}
+                    onClick={() => downloadTemplate()}>下载模板</Button>
             </li>
         </ul>
     </Fragment>
@@ -629,11 +633,17 @@ export default (props: any) => {
         <div id="myCanvasContainer">
             <canvas id="myCanvas" height={document.documentElement.clientHeight - 150} width={document.documentElement.clientWidth - 200 - 250}>
                 <p>Anything in here will be replaced on browsers that support the canvas element</p>
-                {/* 超出一定数量设定截取渲染【考虑中】 */}
+                {/* 超出一定数量设定截取渲染 */}
                 <ul>
-                    {memberOptions.currentplayers.map((item: any, index) => <li key={item.usercode}>
-                        <a href="#" target="_blank" style={{ color: "#fff" }}>{item.username}</a>
-                    </li>)}
+                    {
+                        memberOptions.currentplayers.length > 400 ?
+                            memberOptions.currentplayers.slice(0, 400).map((item: any, index) => <li key={item.usercode}>
+                                <a href="#" target="_blank" style={{ color: "#fff" }}>{item.username}</a>
+                            </li>)
+                            :
+                            memberOptions.currentplayers.map((item: any, index) => <li key={item.usercode}>
+                                <a href="#" target="_blank" style={{ color: "#fff" }}>{item.username}</a>
+                            </li>)}
                 </ul>
 
             </canvas>
