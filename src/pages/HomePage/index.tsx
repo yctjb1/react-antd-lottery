@@ -414,7 +414,7 @@ export default (props: any) => {
         //确保新数据能更新到localStorage，得提前封装一份，所以改成手动再写一遍更新剩余数量
         // updateCurrentAwardLeft(awardOptions.currentAwardKey, RANDOM_NUM)//更新该奖剩余数量
 
-        let new_awardOptions = Object.assign({}, awardOptions, { currentAwardLeft: maxAwardNum - new_awardeePlayers.length });//state3
+        let new_awardOptions = Object.assign({}, awardOptions, { currentAwardLeft: leftAwardNum - new_awardeePlayers.length });//state3
         setAwardOptions(new_awardOptions)
 
         let new_tcOptions = Object.assign({}, tcOptions, { tcRunning: false });//state4
@@ -664,19 +664,21 @@ export default (props: any) => {
                 <LeftPart />
             </div>
             <div style={{ gridColumn: "2/3", height: "100vh", color: "#fff" }}>
+                {/* <div style={{ gridColumn: "2/3", height: "90vh", color: "#fff" }}> */}
                 <BodyPart />
             </div>
             <div style={{ gridColumn: "3/4", color: "#fff", display: "grid", placeItems: "end center" }}>
                 <RightPart />
             </div>
             <div style={{ gridColumn: "1/4", height: "0vh", color: "#fff", display: "grid", placeItems: "center" }}>
+                {/* <div style={{ gridColumn: "1/4", height: "10vh", color: "#fff", display: "grid", placeItems: "center" }}> */}
 
                 {/* 调试用---把0vh改成有效值，同时变更BodyPart上一级div的vh */}
-                {/* 当前最大值：{createOption(awardOptions)[0]}<br />
+                当前最大值：{createOption(awardOptions)[0]}<br />
                 当前剩余数量:{awardOptions.currentAwardLeft}<br />
                 <Button onClick={() => {
                     console.log(JSON.stringify(memberOptions.currentplayers))
-                }}>查看剩余参与者名单</Button> */}
+                }}>查看剩余参与者名单</Button>
 
 
 
@@ -697,8 +699,10 @@ export default (props: any) => {
 
         {awardOptions.awards.map((item: any) => {
             if (item.key === awardOptions.currentAwardKey) {
+                const total = createOption(awardOptions)[0];
+                const used = total - awardOptions.currentAwardLeft
                 return <div key="1" className="showAward">
-                    <b>{item.awardlevel}：{item.awardname}（{awardOptions.currentAwardLeft}/{createOption(awardOptions)[0]}）</b>
+                    <b>{item.awardlevel}：{item.awardname}（{used}/{total}）</b>
                     {/* 本轮中奖名单-展示用 */}
                     <Space size={[8, 16]} wrap style={{
                         width: "80%",
