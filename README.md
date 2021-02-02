@@ -10,13 +10,20 @@
 excel导入导出使用了https://github.com/SheetJS/sheetjs
 
 
-项目在线运行地址:
-http://htmlpreview.github.io/?https://github.com/yctjb1/react-antd-lottery/blob/master/dist/index.html#/home
+项目在线运行地址(得运行很久):
+http://htmlpreview.github.io/?https://github.com/yctjb1/react-antd-lottery/blob/dev/dist/index.html
 
 补充：
 虽然页面显示的限制写的超过400人时，实际标签页渲染只截取400人做展示。
 实际上只有在远少的多的人数里点开始按钮不会出现明显卡顿，暂时没想到好法子解决。
 
+
+如何使用：
+下载后点击dist目录下的index.html即可
+
+如何调试(推荐使用yarn):
+执行yarn install
+yarn run dev
 
 
 
