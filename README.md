@@ -22,8 +22,10 @@ https://yctjb1.github.io/react-antd-lottery/dist/#/home
 下载后点击dist目录下的index.html即可
 
 ## 如何调试(推荐使用yarn):
-执行yarn install
-yarn run dev
+执行
+`yarn install`
+
+`yarn run dev`
 
 
 
