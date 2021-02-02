@@ -663,15 +663,15 @@ export default (props: any) => {
             <div style={{ gridColumn: "1/2", color: "#fff", display: "grid", placeItems: "center" }}>
                 <LeftPart />
             </div>
-            {/* <div style={{ gridColumn: "2/3", height: "100vh", color: "#fff" }}> */}
-            <div style={{ gridColumn: "2/3", height: "90vh", color: "#fff" }}>
+            <div style={{ gridColumn: "2/3", height: "100vh", color: "#fff" }}>
+                {/* <div style={{ gridColumn: "2/3", height: "90vh", color: "#fff" }}> */}
                 <BodyPart />
             </div>
             <div style={{ gridColumn: "3/4", color: "#fff", display: "grid", placeItems: "end center" }}>
                 <RightPart />
             </div>
-            {/* <div style={{ gridColumn: "1/4", height: "0vh", color: "#fff", display: "grid", placeItems: "center" }}> */}
-            <div style={{ gridColumn: "1/4", height: "10vh", color: "#fff", display: "grid", placeItems: "center" }}>
+            <div style={{ gridColumn: "1/4", height: "0vh", color: "#fff", display: "grid", placeItems: "center" }}>
+                {/* <div style={{ gridColumn: "1/4", height: "10vh", color: "#fff", display: "grid", placeItems: "center" }}> */}
 
                 {/* 调试用---把0vh改成有效值，同时变更BodyPart上一级div的vh */}
                 当前最大值：{createOption(awardOptions)[0]}<br />
