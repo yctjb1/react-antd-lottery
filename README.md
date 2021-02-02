@@ -1,6 +1,6 @@
 # react-antd-lottery
 一个通过yarn create react-app react-antd-lottery --template typescript  创建的react^16.13.1 + react-dom^16.13.1 + antd^4.5.2 + @craco/craco^5.6.4 + craco-less^1.17.0 + react-router^5.2.0的项目， 将来预计开发成一个纯前端的抽奖系统
-
+[2020/10/29 更新] 添加了Tailwind 插件 https://www.tailwindcss.cn/docs/installation
 ## 一、搭建与配置
 
 **重点：ts模板下[craco](https://github.com/gsoft-inc/craco)化配置项的create-react-app + antd项目** 
@@ -9,7 +9,7 @@
 
 yarn create react-app react-antd-lottery --template typescript
 
-yarn add react-router less-loader @types/react-router antd
+yarn add react-router-dom @types/react-router-dom  less-loader  antd
 
 
 
