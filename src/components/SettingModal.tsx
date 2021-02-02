@@ -174,7 +174,7 @@ const SettingModal = (props: any) => {
 
 
                         if (new_exist_comb_record[new_comb]) {
-                            console.log("进来")
+
                             new_exist_comb_record[new_comb] += 1;
                             //同名出现n+1次 则 改为 名字(n+1)
                             new_memberOptions.members.push({

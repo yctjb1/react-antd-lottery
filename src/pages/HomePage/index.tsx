@@ -327,7 +327,7 @@ export default (props: any) => {
         const RANDOM_NUM = Math.min(active_resultsNumber, maxAwardNum, leftAwardNum, leftplayersNumber);
 
         let random_num = RANDOM_NUM;
-        console.log("受控的理论真正中奖者数量:" + RANDOM_NUM)
+        // console.log("受控的理论真正中奖者数量:" + RANDOM_NUM)
         let new_awardeePlayers: any[] = [];//本轮中奖名单
         for (let i = 0; i < random_num && new_awardeePlayers.length < active_resultsNumber; i++) {
 
@@ -365,8 +365,7 @@ export default (props: any) => {
                     temp_leftAwardNum--;
                     leftplayersNumber--;
                     lotterOptions.reducemode && currentplayers.splice(new_awardeeIndex, 1)//从抽奖名单中拿掉
-                    console.log(`剔除了一次，并查看新的new_awardeeIndex = ${new_awardeeIndex},currentplayers=`)
-                    console.log(currentplayers)
+
                 }
 
 
