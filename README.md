@@ -3,14 +3,20 @@
 
 最原始版本是下载了一份vue+tagcanvas项目，魔改业务赶鸭子上架应付2019年的年会抽奖，今年重构了一下，原来的项目来源于https://github.com/fouber/lottery
 
+什么是tagcanvas标签云https://www.goat1000.com/tagcanvas.php#links
+
 关于如何在react中使用tagcanvas参考于https://stackoverflow.com/questions/60222556/how-to-import-this-old-library-called-tagcanvas
 
 excel导入导出使用了https://github.com/SheetJS/sheetjs
 
-基于react的tagcanvas配置
-
 
 项目在线运行地址:
+http://htmlpreview.github.io/?https://github.com/yctjb1/react-antd-lottery/blob/master/dist/index.html#/home
+
+补充：
+虽然页面显示的限制写的超过400人时，实际标签页渲染只截取400人做展示。
+实际上只有在远少的多的人数里点开始按钮不会出现明显卡顿，暂时没想到好法子解决。
+
 
 
 
