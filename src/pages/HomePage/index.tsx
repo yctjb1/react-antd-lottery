@@ -671,16 +671,16 @@ export default (props: any) => {
                 <RightPart />
             </div>
             <div style={{ gridColumn: "1/4", height: "0vh", color: "#fff", display: "grid", placeItems: "center" }}>
-                {/* <div style={{ gridColumn: "1/4", height: "10vh", color: "#fff", display: "grid", placeItems: "center" }}> */}
-
                 {/* 调试用---把0vh改成有效值，同时变更BodyPart上一级div的vh */}
+                {/* <div style={{ gridColumn: "1/4", height: "10vh", color: "#fff", display: "grid", placeItems: "center" }}>
+
                 当前最大值：{createOption(awardOptions)[0]}<br />
                 当前剩余数量:{awardOptions.currentAwardLeft}<br />
                 <Button onClick={() => {
                     console.log(JSON.stringify(memberOptions.currentplayers))
                 }}>查看剩余参与者名单</Button>
 
-
+                */}
 
             </div>
 
