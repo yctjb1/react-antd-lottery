@@ -250,15 +250,13 @@ const SettingModal = (props: any) => {
                     pagination={false}></Table>
             </TabPane>
             <TabPane tab="人员" key="2">
-                <Tooltip title={"excel第一个工作表中左顶格[编号]和[姓名]两列"}>
-                    <input
-                        type='file'
-                        accept='.xlsx, .xls' style={{ display: "inline-block", width: "auto" }} onChange={(e) => {
-                            e.persist()
-                            addMemberFromFile(e.target)
-                            e.target.value = ""//解决重复文件上传不触发onChange
-                        }} />
-                </Tooltip>
+                <input
+                    type='file'
+                    accept='.xlsx, .xls' style={{ display: "inline-block", width: "auto" }} onChange={(e) => {
+                        e.persist()
+                        addMemberFromFile(e.target)
+                        e.target.value = ""//解决重复文件上传不触发onChange
+                    }} />
                 {upLoadStatus === "1" ?
                     <span style={{ color: "green" }}>上传成功</span>
                     : upLoadStatus === "2" ?
