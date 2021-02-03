@@ -4,6 +4,7 @@ import {
     PlusCircleOutlined
 } from '@ant-design/icons';
 import { importExcel } from "@utils/handleExcel"
+import moment from 'moment';
 const { TabPane } = Tabs;
 
 
@@ -130,13 +131,13 @@ const SettingModal = (props: any) => {
     const addRow = (activePane: any) => {
         if (activePane === "1") {
             let data = awardOptions.awards;
-            let newkey = data.length ? `${Number(data[data.length - 1].key) + 1}` : "1";
+            let newkey = data.length ? `${Number(data[data.length - 1].key) + 1}` : `${moment().valueOf()}`;//如果全部清空，则从时间戳开始计算key
             setAwardOptions(Object.assign({}, awardOptions, {
                 awards: awardOptions.awards.concat({ awardlevel: "", awardname: "", awardnum: 0, key: newkey })
             }))
         } else if (activePane === "2") {
             let data = memberOptions.members;
-            let newkey = data.length ? `${Number(data[data.length - 1].key) + 1}` : "1";
+            let newkey = data.length ? `${Number(data[data.length - 1].key) + 1}` : `${moment().valueOf()}`;
             setMemberOptions(Object.assign({}, memberOptions, {
                 members: memberOptions.members.concat({ usercode: "", username: "", key: newkey })
             }))
@@ -224,10 +225,22 @@ const SettingModal = (props: any) => {
             <Button key="1" onClick={() => props.handleSettingModal(false)}>
                 取消
             </Button>,
-            <Button key="2" danger onClick={() => props.backFromChild(awardOptions, memberOptions, true)}>
+            <Button key="2" danger onClick={() => {
+                if (awardOptions.awards.length === 0) {
+                    message.warning("奖项不可为零")
+                } else {
+                    props.backFromChild(awardOptions, memberOptions, true)
+                }
+            }}>
                 修改并重置
             </Button>,
-            <Button key="3" type="primary" onClick={() => props.backFromChild(awardOptions, memberOptions, false)}>
+            <Button key="3" type="primary" onClick={() => {
+                if (awardOptions.awards.length === 0) {
+                    message.warning("奖项不可为零")
+                } else {
+                    props.backFromChild(awardOptions, memberOptions, false)
+                }
+            }}>
                 修改不重置
             </Button>
         ]}
