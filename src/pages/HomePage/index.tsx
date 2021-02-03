@@ -7,6 +7,7 @@ import {
 import { exportExcel, downloadTemplate } from "@utils/handleExcel"
 import differenceWith from 'lodash/differenceWith';
 import intersectionWith from 'lodash/intersectionWith';
+import uniqWith from 'lodash/uniqWith';
 import isEqual from 'lodash/isEqual';
 import "./index.less"
 import { result } from 'lodash';
@@ -164,80 +165,96 @@ export default (props: any) => {
         const prevAwards = awardOptions.awards
         const newAwards = new_awardOptions.awards
 
-        let diffMembers = differenceWith(prevMembers, newMembers, isEqual);
-        let diffAwards = differenceWith(prevAwards, newAwards, isEqual);
-        let deleteMembers = differenceWith(prevMembers, diffMembers, isEqual);
-        let addMembers = differenceWith(newMembers, diffMembers, isEqual);
-        let deleteAwards = differenceWith(prevAwards, diffAwards, isEqual);
-        let addAwards = differenceWith(prevAwards, diffAwards, isEqual);
+        //人员
+        let invariant_members = intersectionWith(prevMembers, newMembers, isEqual);//【不变】
+        let delete_prevmodify_members = differenceWith(prevMembers, invariant_members, isEqual);//【删除和修改(旧)】
+        let add_newmodify_members = differenceWith(newMembers, invariant_members, isEqual);//【新增和修改(新)】
+
+        const delete_prevmodify_members_keys = delete_prevmodify_members.map((item: any) => item.key);
+        const add_newmodify_members_keys = add_newmodify_members.map((item: any) => item.key);
+        let newmodify_members = add_newmodify_members.filter((item: any) => delete_prevmodify_members_keys.indexOf(item.key) > -1);//【修改(新)】
+        let prevmodify_members = delete_prevmodify_members.filter((item: any) => add_newmodify_members_keys.indexOf(item.key) > -1);//【修改(旧)】
+
+        let add_members = differenceWith(add_newmodify_members, newmodify_members, isEqual);//【新增】
+        let delete_members = differenceWith(delete_prevmodify_members, prevmodify_members, isEqual);//【删除】
+
+        //奖品
+        let invariant_awards = intersectionWith(prevAwards, newAwards, isEqual);//【不变】
+        let delete_prevmodify_awards = differenceWith(prevAwards, invariant_awards, isEqual);//【删除和修改(旧)】
+        let add_newmodify_awards = differenceWith(newAwards, invariant_awards, isEqual);//【新增和修改(新)】
+
+
+        const delete_prevmodify_awards_keys = delete_prevmodify_awards.map((item: any) => item.key);
+        const add_newmodify_awards_keys = add_newmodify_awards.map((item: any) => item.key);
+        let newmodify_awards = add_newmodify_awards.filter((item: any) => delete_prevmodify_awards_keys.indexOf(item.key) > -1);//【修改(新)】
+        let prevmodify_awards = delete_prevmodify_awards.filter((item: any) => add_newmodify_awards_keys.indexOf(item.key) > -1);//【修改(旧)】
+
+        let add_awards = differenceWith(add_newmodify_awards, newmodify_awards, isEqual);//【新增】
+        let delete_awards = differenceWith(delete_prevmodify_awards, prevmodify_awards, isEqual);//【删除】
 
 
 
+        let delete_awardKeys: string[] = delete_awards.map((item: any) => item.key);
 
-        /*
-       【无论是否重置】
-        (1)如果全部清空，会出现相同的key，出现相同的key但是awardlevel+awardname不同视为删除，清空result中该奖结果。
-        (2)总奖池:剔除diffAwards,其他已经有的不去动,添加addAwards =>直接使用新值
-        (3)总人数:剔除diffMembers,其他已经有的不去动，添加addMembers =>直接使用新值
-        (4)已中奖的名单里,除了(1)的操作，也要剔除diffMembers  =>与new的总名单取交集
-
-        清空awardeePlayers本轮中奖名单
-        更新当前奖项剩余数量
-
-        【不重置】
-        啥也不做
-
-        【重置】
-        清空奖项
-        剩余的参数人数重置
-         */
-
-        //(1)
-        let special_delete_awardKeys: string[] = [];
-        let delete_awardKeys: string[] = deleteAwards.map((item: any) => item.key);
-        prevAwards.map((prevAward: any) => {
-            newAwards.map((newAward: any) => {
-                if (prevAward.key === newAward.key) {
-                    if (prevAward.awardlevel !== newAward.awardlevel && prevAward.awardname !== newAward.awardname) {
-                        special_delete_awardKeys.push(prevAward.key);
-                    }
-                }
-            })
-        })
         let new_lotterOptions = JSON.parse(JSON.stringify(lotterOptions));
+
+
+
+
+        //剔除删除的key所对应的奖
+        let delete_result_members: any = [];
         new_lotterOptions.result.map((item: any, index: any) => {
-            if (special_delete_awardKeys.indexOf(item.awardKey) > -1
-                || delete_awardKeys.indexOf(item.awardKey) > -1) {
+            if (delete_awardKeys.indexOf(item.awardKey) > -1) {
+
+                delete_result_members.push(...item.awardeeArr);
                 delete new_lotterOptions.result[index]
             }
         })
         new_lotterOptions.result = new_lotterOptions.result.filter((item: any) => item)
-        //(4)
+        delete_result_members = uniqWith(delete_result_members, isEqual);
+        if (new_lotterOptions.reducemode) {//如果剔除模式，塞回删除的奖项中的中奖者
+            new_memberOptions.currentplayers.push(...delete_result_members)
+        }
+        //如果currentAwardKey不在新的awards中，则自动取最后一位
+        let check_arr = new_awardOptions.awards.filter((item: any) => item.key === new_awardOptions.currentAwardKey);
+        if (check_arr.length === 0) {
+            let new_currentAward = new_awardOptions.awards.slice(-1)[0]
+            new_awardOptions.currentAwardKey = new_currentAward.key;
+            new_memberOptions.awardeePlayers = [];//清空本轮中奖者
+            //更新最大值
+            new_lotterOptions.active_resultsNumber = new_currentAward.awardnum;
+        }
+
+        const newMembers_keys = newMembers.map((item: any) => item.key);
+        new_memberOptions.awardeePlayers = new_memberOptions.awardeePlayers.filter((item: any) => newMembers_keys.indexOf(item.key) > -1);
         new_lotterOptions.result = new_lotterOptions.result.map((item: any) => {
-            item.awardeeArr = intersectionWith(item.awardeeArr, newMembers, isEqual);
+            item.awardeeArr = item.awardeeArr.filter((item: any) => newMembers_keys.indexOf(item.key) > -1);//中奖者只取新旧key相同的
+            return item
         })
-        new_memberOptions.awardeePlayers = [];
-
-        //更新剩余数量
-        let currentAwardLeft = 0;
-        let now_result_item: ResultType[] = new_lotterOptions.result.filter((item: any) => item?.awardKey == new_awardOptions.currentAwardKey);
-        let exist_num = now_result_item.length ? now_result_item[0].awardeeArr.length : 0;
-        new_awardOptions.awards.map((item: any) => {
-            if (item.key === new_awardOptions.currentAwardKey) {
-                currentAwardLeft = Number(item.awardnum);
-            }
-            currentAwardLeft -= exist_num;
-        })
-        new_awardOptions.currentAwardLeft = currentAwardLeft;
-
-
 
         if (resetFlag) {//重置
+            new_memberOptions.awardeePlayers = [];
             new_lotterOptions.result = [];
             new_memberOptions.currentplayers = new_memberOptions.members;
         } else {//不重置
 
         }
+
+
+        //更新剩余数量
+        let currentAwardLeft = 0;
+        let now_result_item: ResultType[] = new_lotterOptions.result.filter((item: any) => item?.awardKey === new_awardOptions.currentAwardKey);
+
+        let exist_num = now_result_item.length ? now_result_item[0].awardeeArr.length : 0;
+
+        new_awardOptions.awards.map((item: any) => {
+            if (item.key === new_awardOptions.currentAwardKey) {
+                let maxAwardNum = Number(item.awardnum);
+
+                currentAwardLeft = maxAwardNum - exist_num;
+            }
+        })
+        new_awardOptions.currentAwardLeft = currentAwardLeft;
 
         handleSettingModal(false)
         setAwardOptions(new_awardOptions)
@@ -452,7 +469,7 @@ export default (props: any) => {
     }
 
     const updateCurrentAwardLeft = (awardKey?: any, reduceNum?: any, new_lotterOptions?: any) => {
-        let currentAwardKey = awardKey || "1";
+        let currentAwardKey = awardKey || awardOptions.awards[0].key;//不传就取第一位
         let currentAwardLeft = 0;
         let now_result_item: ResultType[] = (new_lotterOptions || lotterOptions).result.filter((item: any) => item.awardKey === currentAwardKey);
         let exist_num = now_result_item.length ? now_result_item[0].awardeeArr.length : 0;
@@ -599,7 +616,7 @@ export default (props: any) => {
     </Fragment>
 
     const RightPart = () => {
-        let result: ResultType = lotterOptions.result.filter((item: any) => item.awardKey === awardOptions.currentAwardKey)[0];
+        let result: ResultType = lotterOptions.result.filter((item: any) => item?.awardKey === awardOptions.currentAwardKey)[0];
         return <Fragment>
             {
                 lotterOptions.shownowresult && result && result?.awardeeArr.length !== 0 ?
@@ -703,6 +720,15 @@ export default (props: any) => {
                 const used = total - awardOptions.currentAwardLeft
                 return <div key="1" className="showAward">
                     <b>{item.awardlevel}：{item.awardname}（{used}/{total}）</b>
+                    {memberOptions.awardeePlayers.length !== 0 ?
+                        <div style={{
+                            color: "yellow",
+                            width: "100%",
+                            textAlign: "center",
+                            fontSize: "20px"
+                        }}>本轮中奖名单:</div> : null
+                    }
+
                     {/* 本轮中奖名单-展示用 */}
                     <Space size={[8, 16]} wrap style={{
                         width: "80%",
